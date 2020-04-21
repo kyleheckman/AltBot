@@ -57,6 +57,8 @@ def get_playlist_items():
     url = 'https://api.spotify.com/v1/playlists/{}/tracks'.format(os.getenv('PLAYLIST_ID'))
 
     headers = {
+        'Accept' : 'application/json',
+        'Content-Type' : 'application/json',
         'Auhtorization' : 'Bearer {}'.format(os.getenv('OAUTH_TOKEN'))
     }
 
