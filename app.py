@@ -30,16 +30,17 @@ def send_message(msg):
     }
 
     request = Request(url, urlencode(data).encode())
-    json = urlopen(request).read.decode()
+    #json = 
+    urlopen(request).read.decode()
 
 def parse_message(data):
     # Get text from JSON data
-    text = data[text]
+    text = data['text']
 
     # Check if the msg is an HTTP URL
     protocol = text[:8]
     if (protocol != 'https://'):
-        return ('NOT_HTTP_MSG_ERROR',,)
+        return ('NOT_HTTP_MSG_ERROR',0,0)
     
     # Retrieve other URI information
     host = text[8:24]
