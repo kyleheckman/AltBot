@@ -31,7 +31,7 @@ def webhook():
 
 @app.route('/authenticate/<auth_code>', methods=['GET'])
 def authentication(auth_code):
-    data = request.get_json()
+    #data = request.get_json()
     #auth_code = data['code']
     print('JSON: {}\n'.format(auth_code))
     return "OK", 200
@@ -76,7 +76,12 @@ def get_playlist_items():
     }
 
     request = Request(url, headers=headers, method='GET')
-    return urlopen(request).read()
+    try:
+        response = urlopen(request).read()
+    except HTTPError as err:
+        if err.code == 401:
+            response = 0
+    return response
 
 
 def get_initial_auth():
