@@ -19,11 +19,12 @@ def webhook():
 
     # Prevent bot replying to itself
     if data['name'] != 'Chatbot':
-        if (protocol != 'NOT_HTTP_ERROR')
+        if (protocol != 'NOT_HTTP_ERROR'):
             msg = 'Protocol: {}\nHost: {}\nPath: {}\nID: {}\n'.format(protocol, host, path, song_id)
             send_message(msg)
 
     return "OK", 200
+
 
 def send_message(msg):
     url = 'https://api.groupme.com/v3/bots/post'
@@ -36,6 +37,7 @@ def send_message(msg):
     request = Request(url, urlencode(data).encode())
     #json = 
     urlopen(request).read.decode()
+
 
 def parse_message(data):
     # Get text from JSON data
@@ -51,6 +53,7 @@ def parse_message(data):
     path = text[25:]
 
     return (protocol, host, path)
+
 
 def extract_song_id(path):
     delim_1 = 0
