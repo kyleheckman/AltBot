@@ -13,8 +13,9 @@ def webhook():
     data = request.get_json()
 
     # Prevent replying to itself
-    if data['name'] != 'fiji-altbot':
-        msg = '{}, you sent "{}".'.format(data['name'], data['text'])
+    if data['name'] != 'Chatbot':
+        msg = 'attachments: {}\nname: {}\nsender_type: {}\nsource_guid: {}\nsystem: {}\ntext: {}\n'.format(data['attachments'],
+            data['name'], data['sender_type'], data['source_guid'], data['system'], data['text'])
         send_message(msg)
 
     return "OK", 200
