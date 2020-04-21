@@ -33,6 +33,7 @@ def webhook():
 def authentication():
     data = request.get_json()
     print(data)
+    return "OK", 200
 
 
 def send_message(msg):
