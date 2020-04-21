@@ -12,7 +12,10 @@ app = Flask(__name__)
 def webhook():
     data = request.get_json()
     protocol, host, path = parse_message(data)
-    song_id = extract_song_id(path)
+    if (len(path) > 0):
+        song_id = extract_song_id(path)
+    else:
+        song_id = 0
 
     # Prevent bot replying to itself
     if data['name'] != 'Chatbot':
