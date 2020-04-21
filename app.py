@@ -19,9 +19,9 @@ def webhook():
 
     # Prevent bot replying to itself
     if data['name'] != 'Chatbot':
-        #if (parsed_msg != 'NOT_HTTP_ERROR')
-        msg = 'Protocol: {}\nHost: {}\nPath: {}\nID: {}\n'.format(protocol, host, path, song_id)
-        send_message(msg)
+        if (protocol != 'NOT_HTTP_ERROR')
+            msg = 'Protocol: {}\nHost: {}\nPath: {}\nID: {}\n'.format(protocol, host, path, song_id)
+            send_message(msg)
 
     return "OK", 200
 
