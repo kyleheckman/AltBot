@@ -22,6 +22,7 @@ def webhook():
         if (protocol != 'NOT_HTTP_ERROR'):
             msg = 'Protocol: {}\nHost: {}\nPath: {}\nID: {}\n'.format(protocol, host, path, song_id)
             send_message(msg)
+            add_song(song_id)
 
     return "OK", 200
 
@@ -35,7 +36,23 @@ def send_message(msg):
     }
 
     request = Request(url, urlencode(data).encode())
-    #json = 
+    urlopen(request).read.decode()
+
+
+def add_song(song_id):
+    url = 'https://api.spotify.com/v1/playlists/{}/tracks'.format(os.getenv('PLAYLIST_ID'))
+
+    headers = {
+        'Accept' : 'application/json',
+        'Content-Type' : 'application/json',
+        'Authorization' : 'Bearer {}'.format(os.getenv('OAUTH_TOKEN'))
+    }
+
+    data = {
+        'uris' : 'spotify:track:{}'.format(song_id)
+    }
+
+    request = Request(url, data=urlencode(data).encode(), headers=headers, method='POST')
     urlopen(request).read.decode()
 
 
