@@ -40,8 +40,8 @@ def send_message(msg):
     request = Request(url, urlencode(data).encode())
     try:
         urlopen(request)
-    except HTTPError:
-        if HTTPError.code == 401:
+    except HTTPError as err:
+        if err.code == 401:
             get_initial_auth()
 
 
@@ -58,8 +58,8 @@ def add_song(song_id):
     request = Request(url, headers=headers, method='POST')
     try:
         urlopen(request)
-    except HTTPError:
-        if HTTPError.code == 401:
+    except HTTPError as err:
+        if err.code == 401:
             get_initial_auth()
 
 
