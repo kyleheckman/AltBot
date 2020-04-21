@@ -11,12 +11,13 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def webhook():
     data = request.get_json()
-    parsed_msg = parse_message(data)
+    protocol, host, path = parse_message(data)
+    song_id = extract_song_id(path)
 
-    # Prevent replying to itself
+    # Prevent bot replying to itself
     if data['name'] != 'Chatbot':
-        #if (parsed_msg != 'NOT_HTTP_MSG_ERROR')
-        msg = 'Protocol: {}\nHost: {}\nPath: {}\n'.format(parsed_msg[0], parsed_msg[1], parsed_msg[2])
+        #if (parsed_msg != 'NOT_HTTP_ERROR')
+        msg = 'Protocol: {}\nHost: {}\nPath: {}\nID: {}\n'.format(protocol, host, path, song_id)
         send_message(msg)
 
     return "OK", 200
@@ -40,10 +41,21 @@ def parse_message(data):
     # Check if the msg is an HTTP URL
     protocol = text[:8]
     if (protocol != 'https://'):
-        return ('NOT_HTTP_MSG_ERROR',0,0)
+        return ('NOT_HTTP_ERROR',0,0)
     
     # Retrieve other URI information
     host = text[8:24]
     path = text[25:]
 
     return (protocol, host, path)
+
+def extract_song_id(path):
+    delim_1 = 0
+    delim_2 = 0
+    for n in range(len(path)):
+        if (path[n] == '/' and delim_1 == 0):
+            delim_1 = n + 1
+        if (path[n] == '?' and delim_2 == 0):
+            delim_2 = n
+    
+    return path[delim_1:delim_2]
