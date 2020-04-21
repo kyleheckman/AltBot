@@ -29,11 +29,11 @@ def webhook():
     return "OK", 200
 
 
-@app.route('/authenticate', methods=['GET'])
-def authentication():
+@app.route('/authenticate<auth_code>', methods=['GET'])
+def authentication(auth_code):
     data = request.get_json()
     #auth_code = data['code']
-    print('JSON: {}\n'.format(data))
+    print('JSON: {}\n'.format(auth_code))
     return "OK", 200
 
 
