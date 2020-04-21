@@ -40,7 +40,7 @@ def send_message(msg):
 
 
 def add_song(song_id):
-    url = 'https://api.spotify.com/v1/playlists/{}/tracks'.format(os.getenv('PLAYLIST_ID'))
+    url = 'https://api.spotify.com/v1/playlists/{}/tracks?uris=spotify%3Atrack%3A{}'.format(os.getenv('PLAYLIST_ID'), song_id)
 
     headers = {
         'Accept' : 'application/json',
@@ -48,12 +48,12 @@ def add_song(song_id):
         'Authorization' : 'Bearer {}'.format(os.getenv('OAUTH_TOKEN'))
     }
 
-    data = {
-        'uris' : 'spotify:track:{}'.format(song_id)
-    }
+    #data = {
+    #    'uris' : 'spotify:track:{}'.format(song_id)
+    #}
 
-    request = Request(url, data=urlencode(data).encode(), headers=headers, method='POST')
-    print('REQUEST: {}\n'.format(request.decode()))
+    request = Request(url, headers=headers, method='POST')
+    print('REQUEST: {}\n'.format(request))
     urlopen(request)
 
 
