@@ -11,12 +11,13 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def webhook():
     data = request.get_json()
+    parsed_msg = parse_message(data)
 
     # Prevent replying to itself
     if data['name'] != 'Chatbot':
-        msg = 'attachments: {}\nname: {}\nsender_type: {}\nsource_guid: {}\nsystem: {}\ntext: {}\n'.format(data['attachments'],
-            data['name'], data['sender_type'], data['source_guid'], data['system'], data['text'])
-        send_message(msg)
+        if (parsed_msg != 'NOT_HTTP_MSG_ERROR')
+            msg = 'Protocol: {}\nHost: {}\nPath: {}\n'.format(parsed_msg[0], parsed_msg[1], parsed_msg[2])
+            send_message(msg)
 
     return "OK", 200
 
@@ -30,3 +31,18 @@ def send_message(msg):
 
     request = Request(url, urlencode(data).encode())
     json = urlopen(request).read.decode()
+
+def parse_message(data):
+    # Get text from JSON data
+    text = data[text]
+
+    # Check if the msg is an HTTP URL
+    protocol = text[:8]
+    if (protocol != 'https://'):
+        return 'NOT_HTTP_MSG_ERROR'
+    
+    # Retrieve other URI information
+    host = text[8:24]
+    path = text[25:]
+
+    return (protocol, host, path)
