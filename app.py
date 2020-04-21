@@ -87,7 +87,7 @@ def get_initial_auth():
     #}
 
     request = Request(url, method='GET')
-    response = urlopen(request).read()
+    response = urlopen(request).read().decode()
     print(response)
 
 
