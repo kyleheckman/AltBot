@@ -47,7 +47,7 @@ def authentication():
         'Content-Type' : 'application/x-www-form-urlencoded'
     }
 
-    req = Request(url, data=params, headers=headers, method='POST')
+    req = Request(url, data=urlencode(params).encode(), headers=headers, method='POST')
     response = urlopen(req)
     print(response.get_json())
 
