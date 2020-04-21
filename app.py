@@ -77,16 +77,16 @@ def get_playlist_items():
 
 
 def get_initial_auth():
-    url = 'https://accounts.spotify.com/authorize'
+    url = 'https://accounts.spotify.com/authorize?client_id={}&response_type=code&redirect_uri={}&scope=playlist-modify-public%20playlist-modify-private'.format(os.getenv('APP_CLIENT_ID'), os.getenv('REDIRECT_URI'))
 
-    data = {
-        'client_id' : os.getenv('APP_CLIENT_ID'),
-        'response_type' : 'code',
-        'redirect_uri' : os.getenv('REDIRECT_URI'),
-        'scope' : 'playlist-modify-public playlist-modify-private'
-    }
+    #data = {
+    #    'client_id' : os.getenv('APP_CLIENT_ID'),
+    #    'response_type' : 'code',
+    #    'redirect_uri' : os.getenv('REDIRECT_URI'),
+    #    'scope' : 'playlist-modify-public playlist-modify-private'
+    #}
 
-    request = Request(url, data=urlencode(data).encode(), method='GET')
+    request = Request(url, method='GET')
     response = urlopen(request).read()
     print(response)
 
