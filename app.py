@@ -31,8 +31,26 @@ def webhook():
 
 @app.route('/authenticate', methods=['GET'])
 def authentication():
-    data = request.args['code']
-    print('JSON: {}\n'.format(data))
+    auth_code = request.args['code']
+    #os.environ['AUTH_CODE'] = str(auth_code)
+
+    url = 'https://accounts.spotify.com/api/token'
+
+    params = {
+        'grant_type' : 'authorization_code',
+        'code' : auth_code,
+        'redirect_uri' : os.getenv('REDIRECT_URI')
+    }
+
+    headers = {
+        'Authorization' : 'Basic {}:{}'.format(os.getenv('APP_CLIENT_ID'), os.getenv('APP_CLIENT_SECRET')),
+        'Content-Type' : 'application/x-www-form-urlencoded'
+    }
+
+    req = Request(url, data=params, headers=headers, method='POST')
+    response = urlopen(request)
+    print(response.get_json())
+
     return "OK", 200
 
 
