@@ -1,6 +1,7 @@
 import os
 import json
 
+from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -37,7 +38,12 @@ def send_message(msg):
     }
 
     request = Request(url, urlencode(data).encode())
-    urlopen(request)
+    try:
+        urlopen(request)
+    except HTTPError:
+        if HTTPError.code == 401:
+            get_initial_auth()
+
 
 
 def add_song(song_id):
@@ -50,7 +56,11 @@ def add_song(song_id):
     }
 
     request = Request(url, headers=headers, method='POST')
-    urlopen(request)
+    try:
+        urlopen(request)
+    except HTTPError:
+        if HTTPError.code == 401:
+            get_initial_auth()
 
 
 def get_playlist_items():
@@ -64,6 +74,21 @@ def get_playlist_items():
 
     request = Request(url, headers=headers, method='GET')
     return urlopen(request).read()
+
+
+def get_initial_auth():
+    url = 'https://accounts.spotify.com/authorize'
+
+    data = {
+        'client_id' : os.getenv('APP_CLIENT_ID'),
+        'response_type' : 'code',
+        'redirect_uri' : os.getenv('REDIRECT_URI'),
+        'scope' : 'playlist-modify-public playlist-modify-private'
+    }
+
+    request = Request(url, data=data, method='GET')
+    response = urlopen(request).read()
+    print(response)
 
 
 def parse_message(data):
