@@ -86,7 +86,7 @@ def get_initial_auth():
         'scope' : 'playlist-modify-public playlist-modify-private'
     }
 
-    request = Request(url, data=data, method='GET')
+    request = Request(url, data=urlencode(data).encode(), method='GET')
     response = urlopen(request).read()
     print(response)
 
