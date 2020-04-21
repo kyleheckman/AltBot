@@ -29,6 +29,12 @@ def webhook():
     return "OK", 200
 
 
+@app.route('/authenticate', methods=['GET'])
+def authentication():
+    data = request.get_json()
+    print(data)
+
+
 def send_message(msg):
     url = 'https://api.groupme.com/v3/bots/post'
 
