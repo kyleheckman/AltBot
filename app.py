@@ -12,7 +12,7 @@ app = Flask(__name__)
 def webhook():
     data = request.get_json()
     protocol, host, path = parse_message(data)
-    if (len(path) > 0):
+    if (path != 0):
         song_id = extract_song_id(path)
     else:
         song_id = 0
