@@ -53,7 +53,7 @@ def add_song(song_id):
     }
 
     request = Request(url, data=urlencode(data).encode(), headers=headers, method='POST')
-    print('REQUEST: {}\n'.format(request))
+    print('REQUEST: {}\n'.format(request.decode()))
     urlopen(request)
 
 
