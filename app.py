@@ -36,7 +36,7 @@ def send_message(msg):
     }
 
     request = Request(url, urlencode(data).encode())
-    urlopen(request).read.decode()
+    urlopen(request)
 
 
 def add_song(song_id):
@@ -53,7 +53,7 @@ def add_song(song_id):
     }
 
     request = Request(url, data=urlencode(data).encode(), headers=headers, method='POST')
-    urlopen(request).read.decode()
+    urlopen(request)
 
 
 def parse_message(data):
