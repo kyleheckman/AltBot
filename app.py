@@ -38,13 +38,8 @@ def send_message(msg):
     }
 
     request = Request(url, urlencode(data).encode())
-    try:
-        urlopen(request)
-    except HTTPError as err:
-        if err.code == 401:
-            get_initial_auth()
-
-
+    urlopen(request)
+    
 
 def add_song(song_id):
     url = 'https://api.spotify.com/v1/playlists/{}/tracks?uris=spotify%3Atrack%3A{}'.format(os.getenv('PLAYLIST_ID'), song_id)
@@ -86,9 +81,11 @@ def get_initial_auth():
     #    'scope' : 'playlist-modify-public playlist-modify-private'
     #}
 
-    request = Request(url, method='GET')
-    response = urlopen(request)
-    print(response)
+    send_message(url)
+
+    #request = Request(url, method='GET')
+    #response = urlopen(request)
+    #print(response)
 
 
 def parse_message(data):
