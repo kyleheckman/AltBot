@@ -48,7 +48,7 @@ def authentication():
     }
 
     req = Request(url, data=params, headers=headers, method='POST')
-    response = urlopen(request)
+    response = urlopen(req)
     print(response.get_json())
 
     return "OK", 200
