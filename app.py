@@ -43,8 +43,7 @@ def authentication():
     #}
 
     headers = {
-        'Authorization' : 'Basic {}:{}'.format(os.getenv('APP_CLIENT_ID'), os.getenv('APP_CLIENT_SECRET')),
-        'Content-Type' : 'application/x-www-form-urlencoded'
+        'Authorization' : 'Basic {}:{}'.format(os.getenv('APP_CLIENT_ID'), os.getenv('APP_CLIENT_SECRET'))
     }
 
     req = Request(url, headers=headers, method='POST')
