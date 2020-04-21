@@ -34,19 +34,19 @@ def authentication():
     auth_code = request.args['code']
     #os.environ['AUTH_CODE'] = str(auth_code)
 
-    url = 'https://accounts.spotify.com/api/token?grant_type=authorization_code&code={}&redirect_url={}'.format(auth_code, os.getenv('REDIRECT_URI'))
+    url = 'https://accounts.spotify.com/api/token'
 
-    #params = {
-    #    'grant_type' : 'authorization_code',
-    #    'code' : auth_code,
-    #    'redirect_uri' : os.getenv('REDIRECT_URI')
-    #}
+    data = {
+        'grant_type' : 'authorization_code',
+        'code' : auth_code,
+        'redirect_uri' : os.getenv('REDIRECT_URI')
+    }
 
     headers = {
         'Authorization' : 'Basic {}:{}'.format(os.getenv('APP_CLIENT_ID'), os.getenv('APP_CLIENT_SECRET'))
     }
 
-    req = Request(url, headers=headers, method='POST')
+    req = Request(url, urlencode(data).encode(), headers=headers, method='POST')
     response = urlopen(req)
     print(response.get_json())
 
