@@ -20,9 +20,10 @@ def webhook():
     # Prevent bot replying to itself
     if data['name'] != 'Chatbot':
         if (protocol != 'NOT_HTTP_ERROR'):
-            msg = 'Protocol: {}\nHost: {}\nPath: {}\nID: {}\n'.format(protocol, host, path, song_id)
-            send_message(msg)
             add_song(song_id)
+            response = get_playlist_items()
+            msg = 'RESPONSE:\n{}\n'.format(response)
+            send_message(msg)
 
     return "OK", 200
 
@@ -48,13 +49,19 @@ def add_song(song_id):
         'Authorization' : 'Bearer {}'.format(os.getenv('OAUTH_TOKEN'))
     }
 
-    #data = {
-    #    'uris' : 'spotify:track:{}'.format(song_id)
-    #}
-
     request = Request(url, headers=headers, method='POST')
-    print('REQUEST: {}\n'.format(request))
     urlopen(request)
+
+
+def get_playlist_items():
+    url = 'https://api.spotify.com/v1/playlists/{}/tracks'.format(os.getenv('PLAYLIST_ID'))
+
+    headers = {
+        'Auhtorization' : 'Bearer {}'.format(os.getenv('OAUTH_TOKEN'))
+    }
+
+    request = Request(url, headers=headers, method='GET')
+    return urlopen(request).read()
 
 
 def parse_message(data):
