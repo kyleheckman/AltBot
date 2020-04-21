@@ -32,8 +32,8 @@ def webhook():
 @app.route('/authenticate', methods=['GET'])
 def authentication():
     data = request.get_json()
-    auth_code = data['code']
-    print(auth_code)
+    #auth_code = data['code']
+    print('JSON: {}\n'.format(data))
     return "OK", 200
 
 
