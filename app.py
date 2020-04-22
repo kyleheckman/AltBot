@@ -87,6 +87,8 @@ def authentication():
     # Send the HTTP request, store the result in response
     response = requests.post(url, data=data, headers=headers)
     
+    print("JSON: {}".format(response.json()))
+    print("RAW: {}".format(response))
     # Set environment variables for auth tokens
     os.environ['OAUTH_TOKEN'] = response.json()['access_token']
     os.environ['REFRESH_TOKEN'] = response.json()['refresh_token']
