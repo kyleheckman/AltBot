@@ -45,8 +45,6 @@ def authentication():
 
     headers = {
         'Authorization' : 'Basic {}:{}'.format(os.getenv('APP_CLIENT_ID'), os.getenv('APP_CLIENT_SECRET')),
-        'Content-Type' : 'application/json',
-        'Accept' : 'application/json'
     }
 
     response = requests.post(url, json=data, headers=headers)
