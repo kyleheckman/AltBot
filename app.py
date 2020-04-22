@@ -48,7 +48,7 @@ def authentication():
         'Authorization' : 'Basic {}'.format(b64encode(auth_hdr.encode('utf-8')))
     }
 
-    response = requests.post(url, json=data, headers=headers)
+    response = requests.post(url, data=data, headers=headers)
     print("AUTH CODE: {}".format(auth_code))
     print('RES: {}'.format(response))
 
