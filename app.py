@@ -48,6 +48,7 @@ def authentication():
     }
 
     response = requests.post(url, json=data, headers=headers)
+    print("AUTH CODE: {}".format(auth_code))
     print('RES: {}'.format(response.json()))
 
     return "OK", 200
@@ -74,6 +75,7 @@ def add_song(song_id):
     }
 
     response = requests.post(url, headers=headers)
+    print('OAUTH: {}'.format(response.status_code))
     if response.status_code == 401:
         get_initial_auth()
 
