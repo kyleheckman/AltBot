@@ -49,8 +49,8 @@ def authentication():
         'Accept' : 'application/json'
     }
 
-    response = requests.post(url, data=data, headers=headers)
-    print(response.json())
+    response = requests.post(url, json=data, headers=headers)
+    print('RES: {}'.format(response.json()))
 
     return "OK", 200
 
