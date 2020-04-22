@@ -43,9 +43,9 @@ def authentication():
         'redirect_uri' : os.getenv('REDIRECT_URI')
     }
 
-    auth_hdr = b64encode(os.getenv('APP_CLIENT_ID') + ':' + os.getenv('APP_CLIENT_SECRET'))
+    auth_hdr = os.getenv('APP_CLIENT_ID') + ':' + os.getenv('APP_CLIENT_SECRET')
     headers = {
-        'Authorization' : 'Basic {}'.format(auth_hdr)
+        'Authorization' : 'Basic {}'.format(b64encode(auth_hdr.encode('utf-8')))
     }
 
     response = requests.post(url, json=data, headers=headers)
