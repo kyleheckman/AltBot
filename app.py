@@ -50,7 +50,7 @@ def authentication():
 
     response = requests.post(url, json=data, headers=headers)
     print("AUTH CODE: {}".format(auth_code))
-    print('RES: {}'.format(response.json()))
+    print('RES: {}'.format(response))
 
     return "OK", 200
 
