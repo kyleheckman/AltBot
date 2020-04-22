@@ -13,7 +13,7 @@ app = Flask(__name__)
 def webhook():
     data = request.get_json()
     protocol, host, path = parse_message(data)
-    if (path != 0):
+    if (host != 0 and path != 0):
         song_id = extract_song_id(path)
     else:
         song_id = 0
@@ -48,7 +48,7 @@ def authentication():
     }
 
     req = Request(url, headers=headers, method='POST')
-    response = urlopen(req, json.demps(data))
+    response = urlopen(req, json.dumps(data))
     print(response.get_json())
 
     return "OK", 200
