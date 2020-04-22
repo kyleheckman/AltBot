@@ -37,6 +37,9 @@ def webhook():
                     res = get_authorization()
                     if (res == 1):
                         get_playlist_items(track_list)
+                    else:
+                        send_message('Authentication Given... Resend Link')
+                        return 'OK', 200
                 else:
                     return 'Bad Request', 400
 
@@ -46,6 +49,9 @@ def webhook():
                     res = get_authorization()
                     if (res == 1):
                         add_song(song_id)
+                    else:
+                        send_message('Authentication Given... Resend Link')
+                        return 'OK', 200
                 else:
                     return 'Bad Request', 400
 
