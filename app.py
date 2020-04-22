@@ -1,9 +1,10 @@
 import os
 import json
 
-from urllib.error import HTTPError
-from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+#from urllib.error import HTTPError
+#from urllib.parse import urlencode
+#from urllib.request import Request, urlopen
+import requests
 
 from flask import Flask, request
 
@@ -48,9 +49,8 @@ def authentication():
         'Accept' : 'application/json'
     }
 
-    req = Request(url, headers=headers, method='POST')
-    response = urlopen(req, data=urlencode(data).encode())
-    print(response.get_json())
+    response = requests.post(url, data=data, headers=headers)
+    print(response.json())
 
     return "OK", 200
 
@@ -63,8 +63,7 @@ def send_message(msg):
         'text' : msg,
     }
 
-    request = Request(url, urlencode(data).encode())
-    urlopen(request)
+    response = requests.post(url, data=data)
     
 
 def add_song(song_id):
@@ -76,12 +75,9 @@ def add_song(song_id):
         'Authorization' : 'Bearer {}'.format(os.getenv('OAUTH_TOKEN'))
     }
 
-    request = Request(url, headers=headers, method='POST')
-    try:
-        urlopen(request)
-    except HTTPError as err:
-        if err.code == 401:
-            get_initial_auth()
+    response = requests.post(url, headers=headers)
+    if response.status_code == 401:
+        get_initial_auth()
 
 
 def get_playlist_items():
@@ -93,12 +89,9 @@ def get_playlist_items():
         'Auhtorization' : 'Bearer {}'.format(os.getenv('OAUTH_TOKEN'))
     }
 
-    request = Request(url, headers=headers, method='GET')
-    try:
-        response = urlopen(request).read()
-    except HTTPError as err:
-        if err.code == 401:
-            response = 0
+    response = requests.get(url, headers=headers)
+    if response.status_code == 401:
+        response = 0
     return response
 
 
