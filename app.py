@@ -107,7 +107,7 @@ def send_message(msg):
     response = requests.post(url, data=data)
 
     # Return with the response HTTP status code
-    return response.status_code()
+    return response.status_code
     
 
 # Adds a song submitted in GroupMe to the desired playlist
@@ -126,7 +126,7 @@ def add_song(song_id):
     response = requests.post(url, headers=headers)
     
     # Return with the response HTTP status code
-    return response.status_code()
+    return response.status_code
 
 
 # Retrieves a list of tracks in a playlist
@@ -146,7 +146,7 @@ def get_playlist_items(track_list):
     print('PLAYLIST: {}'.format(response.json()))
     
     # Return with the reponse HTTP status code
-    return response.status_code()
+    return response.status_code
 
 
 # Generate link to authorize this app to access user Spotify account information
@@ -171,7 +171,7 @@ def get_authorization():
     # Send the HTTP request, store the result in response
     response = requests.post(url, data=data, headers=headers)
     
-    if (response.status_code() == 200):
+    if (response.status_code == 200):
         os.environ['OAUTH_TOKEN'] = response.json()['access_token']
         return 1
     else:
