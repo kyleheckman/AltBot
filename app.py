@@ -1,6 +1,6 @@
 import os
 import json
-
+import six
 #from urllib.error import HTTPError
 #from urllib.parse import urlencode
 #from urllib.request import Request, urlopen
@@ -44,8 +44,9 @@ def authentication():
     }
 
     auth_hdr = os.getenv('APP_CLIENT_ID') + ':' + os.getenv('APP_CLIENT_SECRET')
+    auth_hdr = b64encode(six.text_type(auth_hdr).encode('ascii'))
     headers = {
-        'Authorization' : 'Basic {}'.format(b64encode(auth_hdr.encode('utf-8')))
+        'Authorization' : 'Basic {}'.format(auth_hdr.decode('ascii'))
     }
 
     response = requests.post(url, data=data, headers=headers)
