@@ -90,8 +90,8 @@ def authentication():
     print("JSON: {}".format(response.json()))
     print("RAW: {}".format(response))
     # Set environment variables for auth tokens
-    os.environ['OAUTH_TOKEN'] = response.json()['access_token']
-    os.environ['REFRESH_TOKEN'] = response.json()['refresh_token']
+    print('AUTH: {}'.format(response.json()['access_token']))
+    print('REFRESH: {}'.format(response.json()['refresh_token']))
 
     return "OK", 200
 
