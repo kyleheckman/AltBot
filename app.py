@@ -88,10 +88,10 @@ def authentication():
     response = requests.post(url, data=data, headers=headers)
     
     print("JSON: {}".format(response.json()))
-    print("RAW: {}".format(response))
+
     # Set environment variables for auth tokens
-    print('AUTH: {}'.format(response.json()['access_token']))
-    print('REFRESH: {}'.format(response.json()['refresh_token']))
+    os.putenv('OAUTH_TOKEN', response.json()['access_token'])
+    os.putenv('REFRESH_TOKEN', response.json()['refresh_token'])
 
     return "OK", 200
 
