@@ -43,11 +43,12 @@ def authentication():
     }
 
     headers = {
-        'Authorization' : 'Basic {}:{}'.format(os.getenv('APP_CLIENT_ID'), os.getenv('APP_CLIENT_SECRET'))
+        'Authorization' : 'Basic {}:{}'.format(os.getenv('APP_CLIENT_ID'), os.getenv('APP_CLIENT_SECRET')),
+        'Content-Type' : 'application/json'
     }
 
-    req = Request(url, urlencode(data).encode(), headers=headers, method='POST')
-    response = urlopen(req)
+    req = Request(url, headers=headers, method='POST')
+    response = urlopen(req, json.demps(data))
     print(response.get_json())
 
     return "OK", 200
