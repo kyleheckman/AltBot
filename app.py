@@ -5,7 +5,7 @@ import json
 #from urllib.parse import urlencode
 #from urllib.request import Request, urlopen
 import requests
-
+from base64 import b64encode
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -43,8 +43,9 @@ def authentication():
         'redirect_uri' : os.getenv('REDIRECT_URI')
     }
 
+    auth_hdr = b64encode(os.getenv('APP_CLIENT_ID') + ':' + os.getenv('APP_CLIENT_SECRET'))
     headers = {
-        'Authorization' : 'Basic {}:{}'.format(os.getenv('APP_CLIENT_ID'), os.getenv('APP_CLIENT_SECRET')),
+        'Authorization' : 'Basic {}'.format(auth_hdr)
     }
 
     response = requests.post(url, json=data, headers=headers)
