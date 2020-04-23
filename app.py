@@ -7,7 +7,7 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-global token_dict = {
+token_dict = {
     'OAUTH_TOKEN' : False,
     'REFRESH_TOKEN' : False
 }
@@ -20,6 +20,7 @@ global token_dict = {
 # Receives requests from GroupMe bot whenever a user submits a message
 @app.route('/', methods=['POST'])
 def webhook():
+    global token_dict
     print("WEBHOOK: {}".format(token_dict))
     # Retrieve JSON data from submitted massage, decompose into protocol, host, path
     data = request.get_json()
@@ -69,6 +70,7 @@ def webhook():
 # Only called during initial authentication, subsequent accesses are handled by refresh tokens
 @app.route('/authenticate', methods=['GET'])
 def authentication():
+    global token_dict
     auth_code = request.args['code']
 
     # Spotify Web API endpoint for requesting OAuth tokens
@@ -126,6 +128,7 @@ def send_message(msg):
 
 # Adds a song submitted in GroupMe to the desired playlist
 def add_song(song_id):
+    global token_dict
     # Spotify Web API endpoint for playlist tracks
     url = 'https://api.spotify.com/v1/playlists/{}/tracks?uris=spotify%3Atrack%3A{}'.format(os.getenv('PLAYLIST_ID'), song_id)
 
@@ -145,6 +148,7 @@ def add_song(song_id):
 
 # Retrieves a list of tracks in a playlist
 def get_playlist_items(track_list):
+    global token_dict
     # Spotify Web API endpoint for tracks in a playlist
     url = 'https://api.spotify.com/v1/playlists/{}/tracks'.format(os.getenv('PLAYLIST_ID'))
 
@@ -165,6 +169,7 @@ def get_playlist_items(track_list):
 
 # Generate link to authorize this app to access user Spotify account information
 def get_authorization():
+    global token_dict
     # Sporify endpoint for this app to request access to user account info
     url = 'https://accounts.spotify.com/api/token'
 
