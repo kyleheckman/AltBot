@@ -2,26 +2,34 @@ import os
 import json
 import six
 import requests
+import sqlite3
 from base64 import b64encode
 from flask import Flask, request
 
-app = Flask(__name__)
+#
+# Database code
+#
+conn = sqlite3.connect('plbt.db')
 
-token_dict = {
-    'OAUTH_TOKEN' : False,
-    'REFRESH_TOKEN' : False
-}
+def get_tokens():
+    sql = 'SELECT oauth, refresh FROM keystore ORDER BY id DESCENDING'
+    cursor = conn.execute(sql)
+    return cursor[0]
+
+def put_tokens(oauth, refresh):
+    sql = 'INSERT INTO keystore(oauth, refresh) VALUES ("{}", "{}")'.format(oauth, refresh)
+    cursor = conn.execute(sql)
+    return cursor
 
 #
 # Routes for Flask
 #
+app = Flask(__name__)
 
 # Default route
 # Receives requests from GroupMe bot whenever a user submits a message
 @app.route('/', methods=['POST'])
 def webhook():
-    global token_dict
-    print("WEBHOOK: {}".format(token_dict))
     # Retrieve JSON data from submitted massage, decompose into protocol, host, path
     data = request.get_json()
     protocol, host, path = parse_message(data)
@@ -36,18 +44,6 @@ def webhook():
     if data['name'] != 'Chatbot':
         # Run this routine if a song was submitted
         if (protocol != 'NOT_HTTP_ERROR'):
-            track_list = []
-            status_code = get_playlist_items(track_list)
-            if (status_code != 200):
-                if (status_code == 401):
-                    res = get_authorization()
-                    if (res == 1):
-                        get_playlist_items(track_list)
-                    else:
-                        send_message('Authentication Given... Resend Link')
-                        return 'OK', 200
-                else:
-                    return 'Bad Request', 400
 
             status_code = add_song(song_id)
             if (status_code != 200):
@@ -70,7 +66,6 @@ def webhook():
 # Only called during initial authentication, subsequent accesses are handled by refresh tokens
 @app.route('/authenticate', methods=['GET'])
 def authentication():
-    global token_dict
     auth_code = request.args['code']
 
     # Spotify Web API endpoint for requesting OAuth tokens
@@ -94,13 +89,9 @@ def authentication():
     # Send the HTTP request, store the result in response
     response = requests.post(url, data=data, headers=headers)
 
-    # Set environment variables for auth tokens
-    token_dict['OAUTH_TOKEN'] = response.json()['access_token']
-    token_dict['REFRESH_TOKEN'] = response.json()['refresh_token']
-    #os.putenv('OAUTH_TOKEN', response.json()['access_token'])
-    #os.putenv('REFRESH_TOKEN', response.json()['refresh_token'])
+    # Insert auth tokens into db
+    put_tokens(response.json()['access_token'], response.json()['refresh_token'])
 
-    print('END_AUTH: {}'.format(token_dict))
     return "OK", 200
 
 
@@ -128,15 +119,15 @@ def send_message(msg):
 
 # Adds a song submitted in GroupMe to the desired playlist
 def add_song(song_id):
-    global token_dict
     # Spotify Web API endpoint for playlist tracks
     url = 'https://api.spotify.com/v1/playlists/{}/tracks?uris=spotify%3Atrack%3A{}'.format(os.getenv('PLAYLIST_ID'), song_id)
 
     # HTTP request headers, includes OAuth token for authentication
+    oauth, refresh = get_tokens()
     headers = {
         'Accept' : 'application/json',
         'Content-Type' : 'application/json',
-        'Authorization' : 'Bearer {}'.format(token_dict['OAUTH_TOKEN'])
+        'Authorization' : 'Bearer {}'.format(oauth)
     }
 
     # Send the HTTP request, store the result in response
@@ -148,15 +139,15 @@ def add_song(song_id):
 
 # Retrieves a list of tracks in a playlist
 def get_playlist_items(track_list):
-    global token_dict
     # Spotify Web API endpoint for tracks in a playlist
     url = 'https://api.spotify.com/v1/playlists/{}/tracks'.format(os.getenv('PLAYLIST_ID'))
-    print('PLAYLIST TOKEN: {}'.format(token_dict['OAUTH_TOKEN']))
+
     # HTTP request headers, includes OAuth token for authentication
+    oauth, refresh = get_tokens()
     headers = {
         'Accept' : 'application/json',
         'Content-Type' : 'application/json',
-        'Auhtorization' : 'Bearer {}'.format(token_dict['OAUTH_TOKEN'])
+        'Auhtorization' : 'Bearer {}'.format(oauth)
     }
     print("HEADERS: {}".format(headers))
     # Send the HTTP request, store the result in response
@@ -169,14 +160,14 @@ def get_playlist_items(track_list):
 
 # Generate link to authorize this app to access user Spotify account information
 def get_authorization():
-    global token_dict
     # Sporify endpoint for this app to request access to user account info
     url = 'https://accounts.spotify.com/api/token'
 
     # HTTP request payload to request a refreshed OAuth token
+    oauth, refresh = get_tokens()
     data = {
         'grant_type' : 'refresh_token',
-        'refresh_token' : token_dict['REFRESH_TOKEN']
+        'refresh_token' : refresh
     }
 
     # Authentication header for HTTP request, contains base64 encoded Client ID and Client Secret
@@ -192,7 +183,7 @@ def get_authorization():
     print('AUTH RES: {}'.format(response.json()))
 
     if (response.status_code == 200):
-        token_dict['OAUTH_TOKEN'] = response.json()['access_token']
+        put_tokens(response.json()['access_token'], refresh)
         return 1
     else:
         # Spotify Account endpoint to for this app to request access to user account info
