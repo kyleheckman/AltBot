@@ -158,7 +158,7 @@ def get_playlist_items(track_list):
         'Content-Type' : 'application/json',
         'Auhtorization' : 'Bearer {}'.format(token_dict['OAUTH_TOKEN'])
     }
-
+    print("HEADERS: {}".format(headers))
     # Send the HTTP request, store the result in response
     response = requests.get(url, headers=headers)
     print('PLAYLIST: {}'.format(response.json()))
