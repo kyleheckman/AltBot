@@ -12,7 +12,7 @@ from flask import Flask, request
 conn = sqlite3.connect('plbt.db')
 
 def get_tokens():
-    sql = 'SELECT oauth, refresh FROM keystore ORDER BY id DESCENDING'
+    sql = 'SELECT oauth, refresh FROM keystore ORDER BY id DESC'
     cursor = conn.execute(sql)
     return cursor[0]
 
