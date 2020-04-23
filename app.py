@@ -102,7 +102,10 @@ def authentication():
 @app.route('/db', methods=['GET'])
 def db_debug():
     data = get_all_tokens()
-    return data
+    d = {}
+    for n in range(len(data)):
+        d[n] = data[n]
+    return d
 
 #
 # Support Functions
