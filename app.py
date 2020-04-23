@@ -10,15 +10,16 @@ from flask import Flask, request
 # Database code
 #
 conn = sqlite3.connect('plbt.db')
+cursor = conn.cursor()
 
 def get_tokens():
     sql = 'SELECT oauth, refresh FROM keystore ORDER BY id DESC'
-    cursor = conn.execute(sql)
+    cursor.execute(sql)
     return cursor[0]
 
 def put_tokens(oauth, refresh):
     sql = 'INSERT INTO keystore(oauth, refresh) VALUES ("{}", "{}")'.format(oauth, refresh)
-    cursor = conn.execute(sql)
+    cursor.execute(sql)
     return cursor
 
 #
