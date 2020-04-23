@@ -20,6 +20,7 @@ token_dict = {
 # Receives requests from GroupMe bot whenever a user submits a message
 @app.route('/', methods=['POST'])
 def webhook():
+    print("WEBHOOK: {}".format(token_dict))
     # Retrieve JSON data from submitted massage, decompose into protocol, host, path
     data = request.get_json()
     protocol, host, path = parse_message(data)
@@ -90,8 +91,6 @@ def authentication():
 
     # Send the HTTP request, store the result in response
     response = requests.post(url, data=data, headers=headers)
-    
-    print("JSON: {}".format(response.json()))
 
     # Set environment variables for auth tokens
     token_dict['OAUTH_TOKEN'] = response.json()['access_token']
@@ -99,6 +98,7 @@ def authentication():
     #os.putenv('OAUTH_TOKEN', response.json()['access_token'])
     #os.putenv('REFRESH_TOKEN', response.json()['refresh_token'])
 
+    print('END_AUTH: {}'.format(token_dict))
     return "OK", 200
 
 
@@ -184,7 +184,8 @@ def get_authorization():
 
     # Send the HTTP request, store the result in response
     response = requests.post(url, data=data, headers=headers)
-    
+    print('AUTH RES: {}'.format(response.json()))
+
     if (response.status_code == 200):
         token_dict['OAUTH_TOKEN'] = response.json()['access_token']
         return 1
