@@ -15,7 +15,7 @@ cursor = conn.cursor()
 def get_tokens():
     sql = 'SELECT oauth, refresh FROM keystore ORDER BY id DESC'
     cursor.execute(sql)
-    return cursor[0]
+    return cursor.fetchone()
 
 def put_tokens(oauth, refresh):
     sql = 'INSERT INTO keystore(oauth, refresh) VALUES ("{}", "{}")'.format(oauth, refresh)
