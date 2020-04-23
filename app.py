@@ -168,7 +168,10 @@ def get_authorization():
     url = 'https://accounts.spotify.com/api/token'
 
     # HTTP request payload to request a refreshed OAuth token
-    oauth, refresh = get_tokens()
+    try:
+        oauth, refresh = get_tokens()
+    except:
+        oauth, refresh = (0,0)
     data = {
         'grant_type' : 'refresh_token',
         'refresh_token' : refresh
