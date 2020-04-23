@@ -12,6 +12,11 @@ from flask import Flask, request
 conn = sqlite3.connect('plbt.db')
 cursor = conn.cursor()
 
+def get_all_tokens():
+    sql = 'SELECT * FROM keystore ORDER BY id DESC'
+    cursor.execute(sql)
+    return cursor.fetchall()
+
 def get_tokens():
     sql = 'SELECT oauth, refresh FROM keystore ORDER BY id DESC'
     cursor.execute(sql)
@@ -31,6 +36,7 @@ app = Flask(__name__)
 # Receives requests from GroupMe bot whenever a user submits a message
 @app.route('/', methods=['POST'])
 def webhook():
+    print("CURSOR: {}".format(get_all_tokens()))
     # Retrieve JSON data from submitted massage, decompose into protocol, host, path
     data = request.get_json()
     protocol, host, path = parse_message(data)
@@ -176,7 +182,7 @@ def get_authorization():
         'grant_type' : 'refresh_token',
         'refresh_token' : refresh
     }
-    print("OAUTH".format(oauth))
+    print("OAUTH: {}".format(oauth))
     print("REFRESH: {}".format(refresh))
     # Authentication header for HTTP request, contains base64 encoded Client ID and Client Secret
     # for the Spotify Application Client
