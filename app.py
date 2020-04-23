@@ -151,7 +151,7 @@ def get_playlist_items(track_list):
     global token_dict
     # Spotify Web API endpoint for tracks in a playlist
     url = 'https://api.spotify.com/v1/playlists/{}/tracks'.format(os.getenv('PLAYLIST_ID'))
-
+    print('PLAYLIST TOKEN: {}'.format(token_dict['OAUTH_TOKEN']))
     # HTTP request headers, includes OAuth token for authentication
     headers = {
         'Accept' : 'application/json',
