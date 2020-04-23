@@ -124,7 +124,10 @@ def add_song(song_id):
     url = 'https://api.spotify.com/v1/playlists/{}/tracks?uris=spotify%3Atrack%3A{}'.format(os.getenv('PLAYLIST_ID'), song_id)
 
     # HTTP request headers, includes OAuth token for authentication
-    oauth, refresh = get_tokens()
+    try:
+        oauth, refresh = get_tokens()
+    except:
+        oauth, refresh = (0, 0)
     headers = {
         'Accept' : 'application/json',
         'Content-Type' : 'application/json',
