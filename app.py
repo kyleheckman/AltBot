@@ -12,10 +12,10 @@ from flask import Flask, request
 conn = sqlite3.connect('plbt.db')
 cursor = conn.cursor()
 
-def get_all_tokens():
-    sql = 'SELECT * FROM keystore ORDER BY id DESC'
-    cursor.execute(sql)
-    return cursor.fetchall()
+#def get_all_tokens():
+#    sql = 'SELECT * FROM keystore ORDER BY id DESC'
+#    cursor.execute(sql)
+#    return cursor.fetchall()
 
 def get_tokens():
     sql = 'SELECT oauth, refresh FROM keystore ORDER BY id DESC'
@@ -36,7 +36,6 @@ app = Flask(__name__)
 # Receives requests from GroupMe bot whenever a user submits a message
 @app.route('/', methods=['POST'])
 def webhook():
-    print("CURSOR: {}".format(get_all_tokens()))
     # Retrieve JSON data from submitted massage, decompose into protocol, host, path
     data = request.get_json()
     protocol, host, path = parse_message(data)
@@ -56,11 +55,10 @@ def webhook():
             if (status_code != 200):
                 if (status_code == 401):
                     res = get_authorization()
-                    if (res == 1):
-                        add_song(song_id)
-                    else:
-                        send_message('Authentication Given... Resend Link')
-                        return 'OK', 200
+                    #if (res == 1):
+                    #    add_song(song_id)
+                    #else:
+                    return 'OK', 200
                 else:
                     return 'Bad Request', 400
 
