@@ -7,6 +7,10 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
+token_dict = {
+    'OAUTH_TOKEN' : False,
+    'REFRESH_TOKEN' : False
+}
 
 #
 # Routes for Flask
@@ -90,8 +94,10 @@ def authentication():
     print("JSON: {}".format(response.json()))
 
     # Set environment variables for auth tokens
-    os.putenv('OAUTH_TOKEN', response.json()['access_token'])
-    os.putenv('REFRESH_TOKEN', response.json()['refresh_token'])
+    token_dict['OAUTH_TOKEN'] = response.json()['access_token']
+    token_dict['REFRESH_TOKEN'] = response.json()['refresh_token']
+    #os.putenv('OAUTH_TOKEN', response.json()['access_token'])
+    #os.putenv('REFRESH_TOKEN', response.json()['refresh_token'])
 
     return "OK", 200
 
@@ -127,7 +133,7 @@ def add_song(song_id):
     headers = {
         'Accept' : 'application/json',
         'Content-Type' : 'application/json',
-        'Authorization' : 'Bearer {}'.format(os.getenv('OAUTH_TOKEN'))
+        'Authorization' : 'Bearer {}'.format(token_dict['OAUTH_TOKEN'])
     }
 
     # Send the HTTP request, store the result in response
@@ -146,7 +152,7 @@ def get_playlist_items(track_list):
     headers = {
         'Accept' : 'application/json',
         'Content-Type' : 'application/json',
-        'Auhtorization' : 'Bearer {}'.format(os.getenv('OAUTH_TOKEN'))
+        'Auhtorization' : 'Bearer {}'.format(token_dict['OAUTH_TOKEN'])
     }
 
     # Send the HTTP request, store the result in response
@@ -165,7 +171,7 @@ def get_authorization():
     # HTTP request payload to request a refreshed OAuth token
     data = {
         'grant_type' : 'refresh_token',
-        'refresh_token' : os.getenv('REFRESH_TOKEN')
+        'refresh_token' : token_dict['REFRESH_TOKEN']
     }
 
     # Authentication header for HTTP request, contains base64 encoded Client ID and Client Secret
@@ -180,7 +186,7 @@ def get_authorization():
     response = requests.post(url, data=data, headers=headers)
     
     if (response.status_code == 200):
-        os.environ['OAUTH_TOKEN'] = response.json()['access_token']
+        token_dict['OAUTH_TOKEN'] = response.json()['access_token']
         return 1
     else:
         # Spotify Account endpoint to for this app to request access to user account info
