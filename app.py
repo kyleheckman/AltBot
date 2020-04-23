@@ -176,7 +176,8 @@ def get_authorization():
         'grant_type' : 'refresh_token',
         'refresh_token' : refresh
     }
-
+    print("OAUTH".format(oauth))
+    print("REFRESH: {}".format(refresh))
     # Authentication header for HTTP request, contains base64 encoded Client ID and Client Secret
     # for the Spotify Application Client
     auth_hdr = os.getenv('APP_CLIENT_ID') + ':' + os.getenv('APP_CLIENT_SECRET')
