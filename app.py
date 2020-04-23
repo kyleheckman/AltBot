@@ -7,7 +7,7 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-token_dict = {
+global token_dict = {
     'OAUTH_TOKEN' : False,
     'REFRESH_TOKEN' : False
 }
