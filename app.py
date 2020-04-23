@@ -12,10 +12,10 @@ from flask import Flask, request
 conn = sqlite3.connect('plbt.db')
 cursor = conn.cursor()
 
-#def get_all_tokens():
-#    sql = 'SELECT * FROM keystore ORDER BY id DESC'
-#    cursor.execute(sql)
-#    return cursor.fetchall()
+def get_all_tokens():
+    sql = 'SELECT * FROM keystore ORDER BY id DESC'
+    cursor.execute(sql)
+    return cursor.fetchall()
 
 def get_tokens():
     sql = 'SELECT oauth, refresh FROM keystore ORDER BY id DESC'
@@ -99,6 +99,10 @@ def authentication():
 
     return "OK", 200
 
+@app.route('/db', methods=['GET'])
+def db_debug():
+    data = get_all_tokens()
+    return data
 
 #
 # Support Functions
